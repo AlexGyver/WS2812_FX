@@ -16,7 +16,7 @@
 http://alexgyver.ru/arduino_shop/
 
 * Arduino NANO http://ali.pub/uxbqf
-* Лента http://ali.pub/1qkb67
+* Лента http://ali.pub/1qkb58
 * Колечки http://ali.pub/1qkb67
 * Фоторезистор http://ali.pub/1qkbk0
 * БП на 5 Вольт http://ali.pub/1qkbq8
