@@ -1,21 +1,24 @@
-# Оптический тахометр на Arduino
+# Эффекты для адресной ленты
 
 ## Папки
 
-**LCD_1602_RUS-master** - библиотека для дисплея, установить в C:\Program Files\Arduino\libraries (для 64 разрядных Windows C:\Program Files(x86)\Arduino\libraries)
+**FastLED-master** - библиотека для дисплея, установить в C:\Program Files\Arduino\libraries (для 64 разрядных Windows C:\Program Files(x86)\Arduino\libraries)
   
-**tachometer_LCD** - прошивка для Arduino
+**WS2812_FX** - прошивка для просмотра режимов и эффектов
+
+**WS2812_FX_rndChange_light** - прошивка со случайной сменой режимов и адаптивной подсветкой
 
 ## Схема
-![СХЕМА](https://github.com/AlexGyver/Optical_Tachometer/blob/master/scheme.jpg)
+![СХЕМА](https://github.com/AlexGyver/WS2812_FX/blob/master/scheme.jpg)
 
 ##  Материалы и компоненты
 Всё указанное ниже можно найти здесь
 http://alexgyver.ru/arduino_shop/
 
 * Arduino NANO http://ali.pub/uxbqf
-* Дисплей http://ali.pub/oitu5
-* Датчик http://ali.pub/1kamf3
+* Лента http://ali.pub/oitu5
+* Датчик Фоторезистор
+* БП на 5 Вольт
 
 ## Вам также пригодится 
 * Всё для пайки http://alexgyver.ru/all-for-soldering/
@@ -23,4 +26,3 @@ http://alexgyver.ru/arduino_shop/
 
 ## HOW TO
 * Загрузка прошивки http://alexgyver.ru/arduino-first/
-* Указать число лопастей и их радиус
