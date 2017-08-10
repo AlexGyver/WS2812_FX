@@ -16,9 +16,10 @@
 http://alexgyver.ru/arduino_shop/
 
 * Arduino NANO http://ali.pub/uxbqf
-* Лента http://ali.pub/oitu5
-* Датчик Фоторезистор
-* БП на 5 Вольт
+* Лента http://ali.pub/1qkb67
+* Колечки http://ali.pub/1qkb67
+* Фоторезистор http://ali.pub/1qkbk0
+* БП на 5 Вольт http://ali.pub/1qkbq8
 
 ## Вам также пригодится 
 * Всё для пайки http://alexgyver.ru/all-for-soldering/
