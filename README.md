@@ -2,7 +2,7 @@
 
 ## Папки
 
-**FastLED-master** - библиотека для дисплея, установить в C:\Program Files\Arduino\libraries (для 64 разрядных Windows C:\Program Files(x86)\Arduino\libraries)
+**FastLED** - библиотека для дисплея, установить в C:\Program Files\Arduino\libraries (для 64 разрядных Windows C:\Program Files(x86)\Arduino\libraries)
   
 **WS2812_FX** - прошивка для просмотра режимов и эффектов
 
