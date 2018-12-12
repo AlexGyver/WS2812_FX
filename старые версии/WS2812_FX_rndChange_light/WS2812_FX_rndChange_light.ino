@@ -2,15 +2,22 @@
   Скетч создан на основе FASTSPI2 EFFECTS EXAMPLES автора teldredge (www.funkboxing.com)
   А также вот этой статьи https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/#cylon
   Доработан, переведён и разбит на файлы 2017 AlexGyver
-  Отправляем в монитор порта номер режима, он активируется
+  Смена выбранных режимов в случайном порядке через случайное время
 */
 
 #include "FastLED.h"          // библиотека для работы с лентой
 
-#define LED_COUNT 48          // число светодиодов в кольце/ленте
+#define LED_COUNT 49          // число светодиодов в кольце/ленте
 #define LED_DT 13             // пин, куда подключен DIN ленты
 
-int max_bright = 51;         // максимальная яркость (0 - 255)
+int max_bright = 100;          // максимальная яркость (0 - 255)
+boolean adapt_light = 1;       // адаптивная подсветка (1 - включить, 0 - выключить)
+
+byte fav_modes[] = {2, 11, 14, 25, 27, 30, 41};  // список "любимых" режимов
+byte num_modes = sizeof(fav_modes);         // получить количество "любимых" режимов (они все по 1 байту..)
+unsigned long change_time, last_change, last_bright;
+int new_bright;
+
 int ledMode = 3;
 /*
   Стартовый режим
@@ -53,6 +60,7 @@ float tcount = 0.0;          //-INC VAR FOR SIN LOOPS
 int lcount = 0;              //-ANOTHER COUNTING VAR
 // ---------------СЛУЖЕБНЫЕ ПЕРЕМЕННЫЕ-----------------
 
+
 void setup()
 {
   Serial.begin(9600);              // открыть порт для связи
@@ -61,14 +69,37 @@ void setup()
   LEDS.addLeds<WS2811, LED_DT, GRB>(leds, LED_COUNT);  // настрйоки для нашей ленты (ленты на WS2811, WS2812, WS2812B)
   one_color_all(0, 0, 0);          // погасить все светодиоды
   LEDS.show();                     // отослать команду
+
+  randomSeed(analogRead(0));
+}
+
+void one_color_all(int cred, int cgrn, int cblu) {       //-SET ALL LEDS TO ONE COLOR
+  for (int i = 0 ; i < LED_COUNT; i++ ) {
+    leds[i].setRGB( cred, cgrn, cblu);
+  }
 }
 
 void loop() {
-
-  if (Serial.available() > 0) {     // если что то прислали
-    ledMode = Serial.parseInt();    // парсим в тип данных int
-    change_mode(ledMode);           // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)
+  if (adapt_light) {                        // если включена адаптивная яркость
+    if (millis() - last_bright > 500) {     // каждые полсекунды
+      last_bright = millis();               // сброить таймер
+      new_bright = map(analogRead(6), 1, 1000, 3, max_bright);   // считать показания с фоторезистора, перевести диапазон
+      LEDS.setBrightness(new_bright);        // установить новую яркость
+    }
   }
+
+  if (millis() - last_change > change_time) {
+    change_time = random(5000, 20000);                // получаем новое случайное время до следующей смены режима
+    ledMode = fav_modes[random(0, num_modes - 1)];    // получаем новый случайный номер следующего режима
+    change_mode(ledMode);                             // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)
+    last_change = millis();
+  }
+  /*
+    if (Serial.available() > 0) {     // если что то прислали
+      ledMode = Serial.parseInt();    // парсим в тип данных int
+      change_mode(ledMode);           // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)
+    }
+  */
   switch (ledMode) {
     case 999: break;                           // пазуа
     case  2: rainbow_fade(); break;            // плавная смена цветов всей ленты
@@ -112,7 +143,7 @@ void loop() {
     case 39: RunningLights(0xff, 0xff, 0x00, thisdelay); break;                     // бегущие огни
     case 40: Sparkle(0xff, 0xff, 0xff, thisdelay); break;                           // случайные вспышки белого цвета
     case 41: SnowSparkle(0x10, 0x10, 0x10, thisdelay, random(100, 1000)); break;    // случайные вспышки белого цвета на белом фоне
-    case 42: theaterChase(0xff, 0, 0, thisdelay); break;                            // бегущие каждые 3 (ЧИСЛО СВЕТОДИОДОВ ДОЛЖНО БЫТЬ НЕЧЁТНОЕ)
+    case 42: theaterChase(0xff, 0, 0, thisdelay); break;                            // бегущие каждые 3 (ЧИСЛО СВЕТОДИОДОВ ДОЛЖНО БЫТЬ КРАТНО 3)
     case 43: theaterChaseRainbow(thisdelay); break;                                 // бегущие каждые 3 радуга (ЧИСЛО СВЕТОДИОДОВ ДОЛЖНО БЫТЬ КРАТНО 3)
     case 44: Strobe(0xff, 0xff, 0xff, 10, thisdelay, 1000); break;                  // стробоскоп
 
@@ -129,19 +160,19 @@ void change_mode(int newmode) {
   switch (newmode) {
     case 0: one_color_all(0, 0, 0); LEDS.show(); break; //---ALL OFF
     case 1: one_color_all(255, 255, 255); LEDS.show(); break; //---ALL ON
-    case 2: thisdelay = 20; break;                      //---STRIP RAINBOW FADE
+    case 2: thisdelay = 60; break;                      //---STRIP RAINBOW FADE
     case 3: thisdelay = 20; thisstep = 10; break;       //---RAINBOW LOOP
     case 4: thisdelay = 20; break;                      //---RANDOM BURST
     case 5: thisdelay = 20; thishue = 0; break;         //---CYLON v1
-    case 6: thisdelay = 40; thishue = 0; break;         //---CYLON v2
+    case 6: thisdelay = 80; thishue = 0; break;         //---CYLON v2
     case 7: thisdelay = 40; thishue = 0; break;         //---POLICE LIGHTS SINGLE
     case 8: thisdelay = 40; thishue = 0; break;         //---POLICE LIGHTS SOLID
     case 9: thishue = 160; thissat = 50; break;         //---STRIP FLICKER
     case 10: thisdelay = 15; thishue = 0; break;        //---PULSE COLOR BRIGHTNESS
-    case 11: thisdelay = 15; thishue = 0; break;        //---PULSE COLOR SATURATION
+    case 11: thisdelay = 30; thishue = 0; break;        //---PULSE COLOR SATURATION
     case 12: thisdelay = 60; thishue = 180; break;      //---VERTICAL SOMETHING
     case 13: thisdelay = 100; break;                    //---CELL AUTO - RULE 30 (RED)
-    case 14: thisdelay = 40; break;                     //---MARCH RANDOM COLORS
+    case 14: thisdelay = 80; break;                     //---MARCH RANDOM COLORS
     case 15: thisdelay = 80; break;                     //---MARCH RWB COLORS
     case 16: thisdelay = 60; thishue = 95; break;       //---RADIATION SYMBOL
     //---PLACEHOLDER FOR COLOR LOOP VAR DELAY VARS
@@ -153,10 +184,10 @@ void change_mode(int newmode) {
     case 24: thisdelay = 50; break;                     //---PACMAN
     case 25: thisdelay = 35; break;                     //---RANDOM COLOR POP
     case 26: thisdelay = 25; thishue = 0; break;        //---EMERGECNY STROBE
-    case 27: thisdelay = 25; thishue = 0; break;        //---RGB PROPELLER
+    case 27: thisdelay = 100; thishue = 0; break;        //---RGB PROPELLER
     case 28: thisdelay = 100; thishue = 0; break;       //---KITT
-    case 29: thisdelay = 50; thishue = 95; break;       //---MATRIX RAIN
-    case 30: thisdelay = 5; break;                      //---NEW RAINBOW LOOP
+    case 29: thisdelay = 100; thishue = 95; break;       //---MATRIX RAIN
+    case 30: thisdelay = 15; break;                      //---NEW RAINBOW LOOP
     case 31: thisdelay = 100; break;                    //---MARCH STRIP NOW CCW
     case 32: thisdelay = 100; break;                    //---MARCH STRIP NOW CCW
     case 33: thisdelay = 50; break;                     // colorWipe
@@ -167,7 +198,7 @@ void change_mode(int newmode) {
     case 38: thisdelay = 10; break;                     // rainbowTwinkle
     case 39: thisdelay = 50; break;                     // RunningLights
     case 40: thisdelay = 0; break;                      // Sparkle
-    case 41: thisdelay = 20; break;                     // SnowSparkle
+    case 41: thisdelay = 30; break;                     // SnowSparkle
     case 42: thisdelay = 50; break;                     // theaterChase
     case 43: thisdelay = 50; break;                     // theaterChaseRainbow
     case 44: thisdelay = 100; break;                    // Strobe

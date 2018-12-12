@@ -60,6 +60,7 @@ float tcount = 0.0;          //-INC VAR FOR SIN LOOPS
 int lcount = 0;              //-ANOTHER COUNTING VAR
 // ---------------СЛУЖЕБНЫЕ ПЕРЕМЕННЫЕ-----------------
 
+
 void setup()
 {
   Serial.begin(9600);              // открыть порт для связи
@@ -70,6 +71,12 @@ void setup()
   LEDS.show();                     // отослать команду
 
   randomSeed(analogRead(0));
+}
+
+void one_color_all(int cred, int cgrn, int cblu) {       //-SET ALL LEDS TO ONE COLOR
+  for (int i = 0 ; i < LED_COUNT; i++ ) {
+    leds[i].setRGB( cred, cgrn, cblu);
+  }
 }
 
 void loop() {
