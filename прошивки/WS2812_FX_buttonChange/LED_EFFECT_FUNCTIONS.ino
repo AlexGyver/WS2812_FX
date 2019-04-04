@@ -1233,6 +1233,8 @@ void BouncingColoredBalls(int BallCount, byte colors[][3]) {
 
 boolean safeDelay(int delTime) {
   uint32_t thisTime = millis();
-  while (millis() - thisTime < delTime);
-  return changeFlag;
+  while (millis() - thisTime < delTime) {
+    if (changeFlag) return true;
+  }
+  return false;
 }
