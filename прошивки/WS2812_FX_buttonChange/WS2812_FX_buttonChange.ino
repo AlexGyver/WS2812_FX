@@ -61,6 +61,7 @@ int lcount = 0;              //-ANOTHER COUNTING VAR
 
 volatile uint32_t btnTimer;
 volatile byte modeCounter;
+volatile boolean changeFlag;
 // ---------------СЛУЖЕБНЫЕ ПЕРЕМЕННЫЕ-----------------
 
 
@@ -76,15 +77,6 @@ void setup()
   randomSeed(analogRead(0));
   pinMode(2, INPUT_PULLUP);
   attachInterrupt(0, btnISR, FALLING);
-}
-
-void btnISR() {
-  if (millis() - btnTimer > 150) {
-    btnTimer = millis();  // защита от дребезга
-    if (++modeCounter >= num_modes) modeCounter = 0;
-    ledMode = fav_modes[modeCounter];    // получаем новый номер следующего режима
-    change_mode(ledMode);               // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)    
-  }
 }
 
 void one_color_all(int cred, int cgrn, int cblu) {       //-SET ALL LEDS TO ONE COLOR
@@ -160,6 +152,16 @@ void loop() {
 
     case 888: demo_modeA(); break;             // длинное демо
     case 889: demo_modeB(); break;             // короткое демо
+  }
+}
+
+void btnISR() {
+  if (millis() - btnTimer > 150) {
+    btnTimer = millis();  // защита от дребезга
+    if (++modeCounter >= num_modes) modeCounter = 0;
+    ledMode = fav_modes[modeCounter];    // получаем новый номер следующего режима
+    change_mode(ledMode);               // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)    
+    changeFlag = true;
   }
 }
 
