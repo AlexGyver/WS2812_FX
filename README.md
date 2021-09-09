@@ -18,13 +18,13 @@
 http://alexgyver.ru/arduino_shop/
 
 * Arduino NANO 328p – искать
-* https://ali.ski/tI7blh
-* https://ali.ski/O4yTxb
-* https://ali.ski/6_rFIS
-* https://ali.ski/gb92E-
+* https://ali.ski/KePE9
+* https://ali.ski/IDYZQ
+* https://ali.ski/2v_KZ
+* https://ali.ski/C3xNl
 * Адресная лента
-* https://ali.ski/crrqi1
-* https://ali.ski/2I3be
+* https://ali.ski/jfFbn_
+* https://ali.ski/tx7JlA
 * Купить в РФ, 60 свет/метр, 30 свет/метр
 * Black PCB / White PCB – цвет подложки ленты, чёрная / белая. В видео была чёрная
 * 1m/5m – длина ленты в метрах (чтобы заказать 2 метра, берите два заказа 1m, очевидно)
@@ -33,15 +33,15 @@ http://alexgyver.ru/arduino_shop/
 * IP65 лента покрыта силиконом
 * IP67 лента полностью в силиконовом коробе
 * Постфикс ECO – лента чуть более низкого качества, меньше меди, на длинной ленте будет сильно проседать яркость
-* Крутой гибкий профиль! https://ali.ski/ZbKw6
+* Крутой гибкий профиль! https://ali.ski/Ttwe6
 * БП 5V (мощные)
 * Giant4 60W
 * Giant4 100W
 * БП 5V Али искать (минимум 3A на каждые 100 LED)
-* https://ali.ski/DItEG
-* https://ali.ski/t3YFfU
-* Мощные https://ali.ski/7Jg69
-* Мощные https://ali.ski/NGDrjQ
+* https://ali.ski/KFvzA
+* https://ali.ski/KwLMQ
+* Мощные https://ali.ski/hVVRGQ
+* Мощные https://ali.ski/pZSMm
 
 ## Вам также пригодится 
 * Всё для пайки http://alexgyver.ru/all-for-soldering/
