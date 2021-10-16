@@ -281,22 +281,26 @@ void rule30() {                          //-m13-1D CELLULAR AUTOMATA - RULE 30 (
 }
 
 void random_march() {                   //-m14-RANDOM MARCH CCW
-  copy_led_array();
-  int iCCW;
-  leds[0] = CHSV(random(0, 255), 255, 255);
-  for (int idex = 1; idex < LED_COUNT ; idex++ ) {
-    iCCW = adjacent_ccw(idex);
-    leds[idex].r = ledsX[iCCW][0];
-    leds[idex].g = ledsX[iCCW][1];
-    leds[idex].b = ledsX[iCCW][2];
+  for (int i = LED_COUNT - 1; i > 0; i--) {
+    int icw = adjacent_ccw(i);
+    leds[i].r = leds[icw].r;
+    leds[i].g = leds[icw].g;
+    leds[i].b = leds[icw].b;
   }
+
+  leds[0] = CHSV(random(0, 255), 255, 255);
   LEDS.show();
   if (safeDelay(thisdelay)) return;
 }
 
 void rwb_march() {                    //-m15-R,W,B MARCH CCW
-  copy_led_array();
-  int iCCW;
+  for (int i = LED_COUNT - 1; i > 0; i--) {
+    int icw = adjacent_ccw(i);
+    leds[i].r = leds[icw].r;
+    leds[i].g = leds[icw].g;
+    leds[i].b = leds[icw].b;
+  }
+
   idex++;
   if (idex > 2) {
     idex = 0;
@@ -317,12 +321,6 @@ void rwb_march() {                    //-m15-R,W,B MARCH CCW
       leds[0].g = 0;
       leds[0].b = 255;
       break;
-  }
-  for (int i = 1; i < LED_COUNT; i++ ) {
-    iCCW = adjacent_ccw(i);
-    leds[i].r = ledsX[iCCW][0];
-    leds[i].g = ledsX[iCCW][1];
-    leds[i].b = ledsX[iCCW][2];
   }
   LEDS.show();
   if (safeDelay(thisdelay)) return;
