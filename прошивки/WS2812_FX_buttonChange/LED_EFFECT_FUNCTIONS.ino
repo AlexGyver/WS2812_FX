@@ -239,65 +239,87 @@ void random_red() {                       //QUICK 'N DIRTY RANDOMIZE TO GET CELL
   LEDS.show();
 }
 
+
 void rule30() {                          //-m13-1D CELLULAR AUTOMATA - RULE 30 (RED FOR NOW)
   if (bouncedirection == 0) {
     random_red();
     bouncedirection = 1;
   }
-  copy_led_array();
-  int iCW;
-  int iCCW;
+    
+  CRGB first = leds[0];
+  CRGB last = leds[LED_COUNT - 1];
+  struct CRGB ex_values[3];
+  ex_values[0] = last;  
+  ex_values[1] = leds[0];  
+  ex_values[2] = leds[1];  
+
   int y = 100;
+  
   for (int i = 0; i < LED_COUNT; i++ ) {
-    iCW = adjacent_cw(i);
-    iCCW = adjacent_ccw(i);
-    if (ledsX[iCCW][0] > y && ledsX[i][0] > y && ledsX[iCW][0] > y) {
-      leds[i].r = 0;
-    }
-    if (ledsX[iCCW][0] > y && ledsX[i][0] > y && ledsX[iCW][0] <= y) {
-      leds[i].r = 0;
-    }
-    if (ledsX[iCCW][0] > y && ledsX[i][0] <= y && ledsX[iCW][0] > y) {
-      leds[i].r = 0;
-    }
-    if (ledsX[iCCW][0] > y && ledsX[i][0] <= y && ledsX[iCW][0] <= y) {
-      leds[i].r = 255;
-    }
-    if (ledsX[iCCW][0] <= y && ledsX[i][0] > y && ledsX[iCW][0] > y) {
-      leds[i].r = 255;
-    }
-    if (ledsX[iCCW][0] <= y && ledsX[i][0] > y && ledsX[iCW][0] <= y) {
-      leds[i].r = 255;
-    }
-    if (ledsX[iCCW][0] <= y && ledsX[i][0] <= y && ledsX[iCW][0] > y) {
-      leds[i].r = 255;
-    }
-    if (ledsX[iCCW][0] <= y && ledsX[i][0] <= y && ledsX[iCW][0] <= y) {
-      leds[i].r = 0;
-    }
+    leds[i] = calculateRandom30(ex_values, leds[i], y);
+      shift_array_left_and_add_last_new(ex_values, i, first);
   }
+
   LEDS.show();
   if (safeDelay(thisdelay)) return;
 }
+void shift_array_left_and_add_last_new (CRGB * ex_values, int current_index, CRGB first){
+  ex_values[0] = ex_values[1];
+  ex_values[1] = ex_values[2];
+  if(current_index+1 == LED_COUNT) {
+    ex_values[2] = first;
+  }
+  
+}
+
+CRGB calculateRandom30(CRGB * ex_values, CRGB led, int y){
+  if (ex_values[0].r > y && ex_values[1].r > y && ex_values[2].r > y) {
+      led.r = 0;
+    }
+    if (ex_values[0].r > y && ex_values[1].r > y && ex_values[2].r <= y) {
+      led.r = 0;
+    }
+    if (ex_values[0].r > y && ex_values[1].r <= y && ex_values[2].r > y) {
+      led.r = 0;
+    }
+    if (ex_values[0].r > y && ex_values[1].r <= y && ex_values[2].r <= y) {
+      led.r = 255;
+    }
+    if (ex_values[0].r <= y && ex_values[1].r > y && ex_values[2].r > y) {
+      led.r = 255;
+    }
+    if (ex_values[0].r <= y && ex_values[1].r > y && ex_values[2].r <= y) {
+      led.r = 255;
+    }
+    if (ex_values[0].r <= y && ex_values[1].r <= y && ex_values[2].r > y) {
+      led.r = 255;
+    }
+    if (ex_values[0].r <= y && ex_values[1].r <= y && ex_values[2].r <= y) {
+      led.r = 0;
+    }
+
+  return led;
+}
 
 void random_march() {                   //-m14-RANDOM MARCH CCW
-  copy_led_array();
-  int iCCW;
   leds[0] = CHSV(random(0, 255), 255, 255);
-  for (int idex = 1; idex < LED_COUNT ; idex++ ) {
-    iCCW = adjacent_ccw(idex);
-    leds[idex].r = ledsX[iCCW][0];
-    leds[idex].g = ledsX[iCCW][1];
-    leds[idex].b = ledsX[iCCW][2];
+  for (int i = LED_COUNT - 1; i > 0  ; i-- ) {
+    int i_ccw = adjacent_ccw(i);
+    leds[i] = leds[i_ccw];
   }
+  leds[0] = CHSV(random(0, 255), 255, 255);
   LEDS.show();
   if (safeDelay(thisdelay)) return;
 }
 
 void rwb_march() {                    //-m15-R,W,B MARCH CCW
-  copy_led_array();
-  int iCCW;
+  
   idex++;
+
+  for (int i = LED_COUNT - 1; i > 0; i--) {
+    int icw = adjacent_ccw(i);
+    leds[i] = leds[icw];
+  }
   if (idex > 2) {
     idex = 0;
   }
@@ -318,12 +340,7 @@ void rwb_march() {                    //-m15-R,W,B MARCH CCW
       leds[0].b = 255;
       break;
   }
-  for (int i = 1; i < LED_COUNT; i++ ) {
-    iCCW = adjacent_ccw(i);
-    leds[i].r = ledsX[iCCW][0];
-    leds[i].g = ledsX[iCCW][1];
-    leds[i].b = ledsX[iCCW][2];
-  }
+  
   LEDS.show();
   if (safeDelay(thisdelay)) return;
 }
@@ -620,44 +637,41 @@ void kitt() {                                     //-m28-KNIGHT INDUSTIES 2000
 
 void matrix() {                                   //-m29-ONE LINE MATRIX
   int rand = random(0, 100);
+    
+  for (int i = LED_COUNT - 1; i > 0; i-- ) {
+    leds[i] = leds[i - 1];
+  }
+
   if (rand > 90) {
     leds[0] = CHSV(thishue, thissat, 255);
   }
   else {
     leds[0] = CHSV(thishue, thissat, 0);
   }
-  copy_led_array();
-  for (int i = 1; i < LED_COUNT; i++ ) {
-    leds[i].r = ledsX[i - 1][0];
-    leds[i].g = ledsX[i - 1][1];
-    leds[i].b = ledsX[i - 1][2];
-  }
+
   LEDS.show();
   if (safeDelay(thisdelay)) return;
 }
 
 void strip_march_cw() {                        //-m50-MARCH STRIP CW
-  copy_led_array();
-  int iCW;
+  CRGB led0 = leds[0];
   for (int i = 0; i < LED_COUNT; i++ ) {
-    iCW = adjacent_cw(i);
-    leds[i].r = ledsX[iCW][0];
-    leds[i].g = ledsX[iCW][1];
-    leds[i].b = ledsX[iCW][2];
+    int icw = adjacent_cw(i);
+    leds[i].r = leds[icw];
   }
+  leds[LED_COUNT-1] = led0;
   LEDS.show();
   if (safeDelay(thisdelay)) return;
 }
 
 void strip_march_ccw() {                        //-m51-MARCH STRIP CCW
-  copy_led_array();
-  int iCCW;
-  for (int i = 0; i < LED_COUNT; i++ ) {
-    iCCW = adjacent_ccw(i);
-    leds[i].r = ledsX[iCCW][0];
-    leds[i].g = ledsX[iCCW][1];
-    leds[i].b = ledsX[iCCW][2];
+  
+  CRGB lastLed =  leds[LED_COUNT - 1];
+  for (int i = LED_COUNT - 1; i > 0; i--) {
+    int icw = adjacent_ccw(i);
+    leds[i] = leds[icw];
   }
+  leds[0] = lastLed;
   LEDS.show();
   if (safeDelay(thisdelay)) return;
 }
@@ -712,10 +726,12 @@ void demo_modeA() {
     fade_vertical();
   }
   random_red();
+  
   thisdelay = 100;
   for (int i = 0; i < r * 5; i++) {
     rule30();
   }
+  
   thisdelay = 40;
   for (int i = 0; i < r * 8; i++) {
     random_march();

@@ -7,18 +7,19 @@
 
 #include "FastLED.h"          // библиотека для работы с лентой
 
-#define LED_COUNT 49          // число светодиодов в кольце/ленте
+#define LED_COUNT 300          // число светодиодов в кольце/ленте
 #define LED_DT 13             // пин, куда подключен DIN ленты
+#define BUTTON 2             // пин кнопки
 
 int max_bright = 100;          // максимальная яркость (0 - 255)
 boolean adapt_light = 1;       // адаптивная подсветка (1 - включить, 0 - выключить)
 
-byte fav_modes[] = {2, 11, 14, 25, 27, 30, 41};  // список "любимых" режимов
+byte fav_modes[] = {2,3,4,5,6,7,8,9,10, 11,11,12,13, 14,15,16,17,18,19,20,21,21,22,23,24, 25, 26, 27, 28,29, 30, 31,32,33,34,35,36,37,38,39,40, 41,42};  // список "любимых" режимов
 byte num_modes = sizeof(fav_modes);         // получить количество "любимых" режимов (они все по 1 байту..)
 unsigned long change_time, last_change, last_bright;
 int new_bright;
 
-volatile byte ledMode = 3;
+volatile byte ledMode = 888;
 /*
   Стартовый режим
   0 - все выключены
@@ -39,7 +40,7 @@ int BOTTOM_INDEX = 0;        // светодиод начала отсчёта
 int TOP_INDEX = int(LED_COUNT / 2);
 int EVENODD = LED_COUNT % 2;
 struct CRGB leds[LED_COUNT];
-int ledsX[LED_COUNT][3];     //-ARRAY FOR COPYING WHATS IN THE LED STRIP CURRENTLY (FOR CELL-AUTOMATA, MARCH, ETC)
+//int coloredLeds[LED_COUNT];     //-ARRAY FOR COPYING WHATS IN THE LED STRIP CURRENTLY (FOR CELL-AUTOMATA, MARCH, ETC)
 
 int thisdelay = 20;          //-FX LOOPS DELAY VAR
 int thisstep = 10;           //-FX LOOPS DELAY VAR
@@ -75,7 +76,7 @@ void setup()
   LEDS.show();                     // отослать команду
 
   randomSeed(analogRead(0));
-  pinMode(2, INPUT_PULLUP);
+  pinMode(BUTTON, INPUT_PULLUP);
   attachInterrupt(0, btnISR, FALLING);
 }
 
