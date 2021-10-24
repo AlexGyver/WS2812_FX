@@ -247,9 +247,8 @@ void rule30() {                          //-m13-1D CELLULAR AUTOMATA - RULE 30 (
   }
     
   CRGB first = leds[0];
-  CRGB last = leds[LED_COUNT - 1];
   struct CRGB ex_values[3];
-  ex_values[0] = last;  
+  ex_values[0] = leds[LED_COUNT - 1];
   ex_values[1] = leds[0];  
   ex_values[2] = leds[1];  
 
