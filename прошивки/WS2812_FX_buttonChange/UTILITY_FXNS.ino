@@ -52,14 +52,6 @@ int adjacent_ccw(int i) {
   return r;
 }
 
-void copy_led_array() {
-  for (int i = 0; i < LED_COUNT; i++ ) {
-    ledsX[i][0] = leds[i].r;
-    ledsX[i][1] = leds[i].g;
-    ledsX[i][2] = leds[i].b;
-  }
-}
-
 void setPixel(int Pixel, byte red, byte green, byte blue) {
   leds[Pixel].r = red;
   leds[Pixel].g = green;
